@@ -18,5 +18,7 @@ def get_hash(string: str) -> str:
 
 class Settings:
     MONGO_URL = os.environ.get('MONGO_URL')
-    PROJECT_PATH = os.environ.get('PROJECT_PATH')
+    PROJECT_DIR = os.environ.get('PROJECT_DIR')
+    APP_DIR = os.environ.get('APP_DIR')
+    TEMPLATE_DIR = os.environ.get('TEMPLATE_DIR')
     DB_NAME = os.environ.get('DB_NAME')
