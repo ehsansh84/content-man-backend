@@ -4,7 +4,6 @@ import uvicorn
 # from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-print(f'Loaded envs: {load_dotenv()}')
 project_path = os.getenv("PROJECT_PATH")
 if project_path:
     sys.path.append(project_path)
@@ -12,6 +11,7 @@ if project_path:
 from app.api.v1.user import router as user_router
 from app.api.v1.content import router as content_router
 from app.api.v1.category import router as category_router
+from app.api.v1.privacy import router as privacy_router
 
 app = FastAPI()
 
@@ -30,6 +30,7 @@ app.add_middleware(
 app.include_router(router=user_router)
 app.include_router(router=content_router)
 app.include_router(router=category_router)
+app.include_router(router=privacy_router)
 # app.mount("/static", StaticFiles(directory=Settings.MEDIA_PATH), name="static")
 # app.mount("/uploaded", StaticFiles(directory=Settings.UPLOAD_PATH), name="uploaded")
 
