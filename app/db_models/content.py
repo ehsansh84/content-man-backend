@@ -1,6 +1,6 @@
 from typing import List
 from app.core.base_db import DB
-from app.db_models.consts import ContentType
+from app.db_models.consts import ContentType, Language
 
 module_name = 'content'
 module_text = 'Content'
@@ -13,9 +13,10 @@ class Content(DB):
 
     def __init__(self, _id=None, module_name=module_name, module_text=module_text, db=None,
                  user_id='', category_id='', title='', text='', type=ContentType.Text, image='',
-                 choices=None, answer=-1, visit_count=0, like_count=0, tags=None):
+                 choices=None, answer=-1, visit_count=0, like_count=0, tags=None, language=Language.Farsi):
         self._id: str = _id
         self.user_id: str = user_id
+        self.language: Language = language
         self.category_id: str = category_id
         self.title: str = title
         self.text: str = text

@@ -11,3 +11,8 @@ class ContentType(str, Enum):
     Text = "text"
     Image = "image"
     Question = "question"
+
+
+class Language(str, Enum):
+    Farsi = "FA"
+    English = "EN"

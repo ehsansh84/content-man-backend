@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 from pydantic import BaseModel, Field
-from app.db_models.consts import ContentType
+from app.db_models.consts import ContentType, Language
 
 module_name = 'content'
 
@@ -11,6 +11,7 @@ class Base(BaseModel):
     Use this model for base fields of a {module_name}
     """
     category_id: str = Field(description="category_id", example="62d7a781d8f8d7627ce212d5")
+    language: Language = Field(description="language", example=Language.Farsi)
     title: str = Field(description="title", example="62d7a781d8f8d7627ce212d5")
     text: str = Field(description="text", example="62d7a781d8f8d7627ce212d5")
     image: str = Field(description="image", example="62d7a781d8f8d7627ce212d5")
