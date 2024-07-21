@@ -4,10 +4,9 @@ import uvicorn
 # from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-project_path = os.getenv("PROJECT_PATH")
-if project_path:
-    sys.path.append(project_path)
-
+project_dir = os.getenv("PROJECT_DIR")
+if project_dir:
+    sys.path.append(project_dir)
 from app.api.v1.user import router as user_router
 from app.api.v1.content import router as content_router
 from app.api.v1.category import router as category_router
