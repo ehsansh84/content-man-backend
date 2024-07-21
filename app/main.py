@@ -11,6 +11,7 @@ if project_path:
 
 from app.api.v1.user import router as user_router
 from app.api.v1.content import router as content_router
+from app.api.v1.category import router as category_router
 
 app = FastAPI()
 
@@ -28,6 +29,7 @@ app.add_middleware(
 
 app.include_router(router=user_router)
 app.include_router(router=content_router)
+app.include_router(router=category_router)
 # app.mount("/static", StaticFiles(directory=Settings.MEDIA_PATH), name="static")
 # app.mount("/uploaded", StaticFiles(directory=Settings.UPLOAD_PATH), name="uploaded")
 
