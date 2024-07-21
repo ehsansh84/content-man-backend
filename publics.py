@@ -1,12 +1,9 @@
 from dotenv import load_dotenv
 import os
 load_dotenv()
-# MONGO_URL = os.getenv('MONGO_URL')
-# DB_NAME = os.getenv('DB_NAME')
 
 
 def db():
-    # print(f'MONGO_URL: {Settings.MONGO_URL}')
     from pymongo import MongoClient
     con = MongoClient(Settings.MONGO_URL)
     return con[Settings.DB_NAME]
