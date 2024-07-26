@@ -63,12 +63,4 @@ class User(DB):
                 {"mobile": self.mobile, "password": self.password},
             ]
         })
-        # print({
-        #     "$or": [
-        #         {"username": self.username, "password": self.password},
-        #         {"email": self.email, "password": self.password},
-        #         {"mobile": self.mobile, "password": self.password},
-        #     ]
-        # })
-        # print(result)
         return result
