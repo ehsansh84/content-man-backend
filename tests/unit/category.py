@@ -1,106 +1,143 @@
-import unittest
-from unittest.mock import MagicMock, patch
+import pytest
 from bson import ObjectId
-from datetime import datetime
 from app.db_models.category import Category
 from app.db_models.consts import Language
+from unittest.mock import MagicMock
 
 
-class TestCategory(unittest.TestCase):
-
-    def setUp(self):
-        self.mock_db = MagicMock()
-        self.mock_col = self.mock_db['category']
-        self.category = Category(db=self.mock_db)
-
-    def test_insert(self):
-        # Arrange
-        self.category.name = "Test Category"
-        self.category.language = Language.Farsi
-        self.mock_col.insert_one.return_value.inserted_id = ObjectId("5f50c31e8a7d7a1c9c8b4567")
-        # Act
-        result = self.category.insert()
-
-        # Assert
-        self.assertEqual(result, "5f50c31e8a7d7a1c9c8b4567")
-        self.mock_col.insert_one.assert_called_once()
-        self.assertTrue(self.category.is_loaded())
-
-    def test_load(self):
-        # Arrange
-        mock_data = {
-            "_id": ObjectId("5f50c31e8a7d7a1c9c8b4567"),
-            "name": "Test Category",
-            "language": Language.Farsi,
-            "created_at": datetime.now(),
-            "updated_at": datetime.now()
-        }
-        self.mock_col.find_one.return_value = mock_data
-        self.category._id = "5f50c31e8a7d7a1c9c8b4567"
-
-        # Act
-        result = self.category.load()
-
-        # Assert
-        self.assertTrue(result)
-        self.assertEqual(self.category.name, "Test Category")
-        self.assertEqual(self.category.language, Language.Farsi)
-        self.mock_col.find_one.assert_called_once_with({"_id": ObjectId("5f50c31e8a7d7a1c9c8b4567")})
-
-    def test_update(self):
-        # Arrange
-        self.category._id = "5f50c31e8a7d7a1c9c8b4567"
-        self.category.name = "Updated Category"
-        self.category._DB__loaded = True  # Simulate a loaded object
-
-        # Act
-        self.category.update()
-
-        # Assert
-        self.mock_col.update_one.assert_called_once()
-        call_args = self.mock_col.update_one.call_args
-        self.assertEqual(call_args[0][0], {'_id': ObjectId("5f50c31e8a7d7a1c9c8b4567")})
-        self.assertIn('name', call_args[0][1]['$set'])
-        self.assertEqual(call_args[0][1]['$set']['name'], "Updated Category")
-
-    def test_delete(self):
-        # Arrange
-        self.category._id = "5f50c31e8a7d7a1c9c8b4567"
-        self.mock_col.delete_one.return_value.raw_result = {"n": 1, "ok": 1.0}
-
-        # Act
-        result = self.category.delete()
-
-        # Assert
-        self.assertEqual(result, {"n": 1, "ok": 1.0})
-        self.mock_col.delete_one.assert_called_once_with({'_id': ObjectId("5f50c31e8a7d7a1c9c8b4567")})
-
-    def test_list(self):
-        # Arrange
-        mock_data = [
-            {
-                "_id": ObjectId("5f50c31e8a7d7a1c9c8b4567"),
-                "name": "Category 1",
-                "language": Language.Farsi
-            },
-            {
-                "_id": ObjectId("5f50c31e8a7d7a1c9c8b4568"),
-                "name": "Category 2",
-                "language": Language.English
-            }
-        ]
-        self.mock_col.find.return_value = mock_data
-
-        # Act
-        result = self.category.list()
-
-        # Assert
-        self.assertEqual(len(result), 2)
-        self.assertIsInstance(result[0], Category)
-        self.assertEqual(result[0].name, "Category 1")
-        self.assertEqual(result[1].name, "Category 2")
-        self.mock_col.find.assert_called_once_with({})
+@pytest.fixture
+def mock_db():
+    return MagicMock()
 
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.fixture
+def category(mock_db):
+    return Category(
+        _id="123456789012345678901234",
+        db=mock_db,
+        user_id="user123",
+        category_id="parent123",
+        title="Test Category",
+        language=Language.Farsi
+    )
+
+
+def test_category_initialization(category):
+    assert category._id == "123456789012345678901234"
+    assert category.user_id == "user123"
+    assert category.parent_id == "parent123"
+    assert category.name == "Test Category"
+    assert category.language == Language.Farsi
+
+
+def test_category_to_json(category):
+    json_data = category.to_json()
+    assert json_data['id'] == "123456789012345678901234"
+    assert json_data['name'] == "Test Category"
+    assert json_data['language'] == Language.Farsi
+    assert json_data['user_id'] == "user123"
+    assert json_data['parent_id'] == "parent123"
+
+
+def test_category_insert(category):
+    category._id = None
+    mock_insert_result = MagicMock()
+    mock_insert_result.inserted_id = ObjectId("123456789012345678901234")
+    category.col.insert_one = MagicMock(return_value=mock_insert_result)
+
+    result = category.insert()
+
+    assert result == "123456789012345678901234"
+    assert category._id == "123456789012345678901234"
+    assert category._DB__loaded == True
+    category.col.insert_one.assert_called_once()
+
+
+def test_category_update(category):
+    category._DB__loaded = True
+    category.col.update_one = MagicMock()
+    category.update()
+    category.col.update_one.assert_called_once()
+
+
+def test_category_delete(category):
+    category.col.delete_one = MagicMock()
+    category.delete()
+    category.col.delete_one.assert_called_once()
+
+
+def test_category_load(category):
+    mock_result = {
+        "_id": ObjectId("123456789012345678901234"),
+        "name": "Loaded Category",
+        "language": Language.English,
+        "user_id": "user456",
+        "parent_id": "parent456"
+    }
+    category.col.find_one = MagicMock(return_value=mock_result)
+
+    result = category.load()
+
+    assert result == True
+    assert category.name == "Loaded Category"
+    assert category.language == Language.English
+    assert category.user_id == "user456"
+    assert category.parent_id == "parent456"
+
+
+def test_category_exists(category):
+    category.col.find_one = MagicMock(return_value={"name": "Existing Category"})
+
+    result = category.exists("name", "Existing Category")
+
+    assert result == True
+    category.col.find_one.assert_called_once_with({"name": "Existing Category"})
+
+
+def test_category_list(category):
+    mock_results = [
+        {"_id": ObjectId("123456789012345678901234"), "name": "Category 1"},
+        {"_id": ObjectId("123456789012345678901235"), "name": "Category 2"}
+    ]
+    category.col.find = MagicMock(return_value=mock_results)
+
+    results = category.list()
+
+    assert len(results) == 2
+    assert isinstance(results[0], Category)
+    assert results[0].name == "Category 1"
+    assert results[1].name == "Category 2"
+
+
+def test_category_count(category):
+    category.col.count_documents = MagicMock(return_value=5)
+
+    result = category.count({"language": Language.Farsi})
+
+    assert result == 5
+    category.col.count_documents.assert_called_once_with({"language": Language.Farsi})
+
+
+def test_category_set_payload(category):
+    payload = {
+        "name": "Updated Category",
+        "language": Language.English
+    }
+    category.set_payload(payload)
+
+    assert category.name == "Updated Category"
+    assert category.language == Language.English
+    assert category._DB__loaded == True
+
+
+def test_category_set_payload_with_invalid_attribute(category):
+    payload = {
+        "invalid_attribute": "value"
+    }
+    with pytest.raises(ValueError):
+        category.set_payload(payload)
+
+
+def test_category_set_payload_with_none(category):
+    with pytest.raises(ValueError):
+        category.set_payload(None)

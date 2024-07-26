@@ -187,6 +187,8 @@ class DB:
             for key, value in payload.items():
                 if hasattr(self, key):
                     setattr(self, key, value)
+                else:
+                    raise ValueError(f"Invalid attribute '{key}' for {self.module_name}")
             self.__loaded = True
         except ValueError:
             raise ValueError("An error with the values of payload happened")
