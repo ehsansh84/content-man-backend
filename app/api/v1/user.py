@@ -31,9 +31,6 @@ async def register(item: Register):
 async def login(item: Login):
     obj = DataModel()
     obj.set_payload(jsonable_encoder(item))
-    # print(obj.username)
-    # print(obj.email)
-    # print(obj.mobile)
     if obj.login():
         return {'detail': f'Login successful'}
     else:
@@ -44,7 +41,6 @@ async def login(item: Login):
 async def forgot_password(item: ForgotPassword):
     obj = DataModel()
     obj.set_payload(jsonable_encoder(item))
-    # print(obj.username)
     result = obj.list({
       '$or': [
         {'username': item.username},
