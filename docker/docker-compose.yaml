@@ -13,3 +13,4 @@ services:
       - MONGO_URL='mongodb://mongodb:27017'
       - PROJECT_PATH=/app
       - DB_NAME=content
+      - PYTHONPATH=/app
