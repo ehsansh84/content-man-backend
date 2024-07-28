@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os, sys
 import uvicorn
 # from fastapi.staticfiles import StaticFiles
