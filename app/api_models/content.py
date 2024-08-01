@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from app.db_models.consts import ContentType, Language
 
@@ -12,9 +12,9 @@ class Base(BaseModel):
     """
     category_id: str = Field(description="category_id", example="62d7a781d8f8d7627ce212d5")
     language: Language = Field(description="language", example=Language.Farsi)
-    title: str = Field(description="title", example="62d7a781d8f8d7627ce212d5")
-    text: str = Field(description="text", example="62d7a781d8f8d7627ce212d5")
-    image: str = Field(description="image", example="62d7a781d8f8d7627ce212d5")
+    title: str = Field(description="title", example="Title")
+    text: str = Field(description="text", example="Description")
+    image: str = Field(description="image")
     type: ContentType = Field(description="type", example=ContentType.Text)
     choices: str = Field(description="choices", example=["Option1", "Option2", "Option3", "Option4"])
     answer: int = Field(description="answer", example=0)
@@ -39,6 +39,14 @@ class Read(Base):
     user_id: str = Field(description="user_id", example="62d7a781d8f8d7627ce212d5")
     visit_count: int = Field(description="visit_count", example=0)
     like_count: int = Field(description="like_count", example=0)
+
+
+class ReadQuery(Base):
+    f"""
+    Use this model to query {module_name}
+    """
+    categories: Optional[List[str]] = Field(description="category ids to query", example=["62d7a781d8f8d7627ce212d5",
+                                                                           "62d7a781d8f8d7627ce212d2"])
 
 
 class Update(Base):
