@@ -10,6 +10,7 @@ from app.api.v1.user import router as user_router
 from app.api.v1.content import router as content_router
 from app.api.v1.category import router as category_router
 from app.api.v1.privacy import router as privacy_router
+from app.api.v1.health_check import router as health_check_router
 
 app = FastAPI()
 
@@ -29,6 +30,7 @@ app.include_router(router=user_router)
 app.include_router(router=content_router)
 app.include_router(router=category_router)
 app.include_router(router=privacy_router)
+app.include_router(router=health_check_router)
 # app.mount("/static", StaticFiles(directory=Settings.MEDIA_PATH), name="static")
 # app.mount("/uploaded", StaticFiles(directory=Settings.UPLOAD_PATH), name="uploaded")
 
