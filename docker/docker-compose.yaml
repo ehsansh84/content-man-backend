@@ -7,10 +7,10 @@ services:
       dockerfile: ./docker/Dockerfile  # Specify the path to the Dockerfile
     image: content
     ports:
-      - "8200:8200"
+      - "8300:8200"
     container_name: content
     environment:
       - MONGO_URL='mongodb://mongodb:27017'
-      - PROJECT_PATH=/app
+      - PROJECT_DIR=/app
       - DB_NAME=content
       - PYTHONPATH=/app
