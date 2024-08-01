@@ -14,3 +14,10 @@ services:
       - PROJECT_DIR=/app
       - DB_NAME=content
       - PYTHONPATH=/app
+    networks:
+      - mongodb_network
+networks:
+  mongodb_network:
+    external: true
+
+
