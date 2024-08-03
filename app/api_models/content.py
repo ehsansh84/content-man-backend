@@ -16,9 +16,9 @@ class Base(BaseModel):
     text: str = Field(description="text", example="Description")
     image: str = Field(description="image")
     type: ContentType = Field(description="type", example=ContentType.Text)
-    choices: str = Field(description="choices", example=["Option1", "Option2", "Option3", "Option4"])
+    choices: list = Field(description="choices", example=["Option1", "Option2", "Option3", "Option4"])
     answer: int = Field(description="answer", example=0)
-    tags: list = Field(description="tags", example=0)
+    tags: list = Field(description="tags", example=[])
 
 
 class Write(Base):
