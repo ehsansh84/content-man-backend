@@ -12,6 +12,7 @@ class Base(BaseModel):
     """
     category_id: str = Field(description="category_id", example="62d7a781d8f8d7627ce212d5")
     language: Language = Field(description="language", example=Language.Farsi)
+    ref_url: str = Field(description="ref_url", example="http://www.google.com/ref")
     title: str = Field(description="title", example="Title")
     text: str = Field(description="text", example="Description")
     image: str = Field(description="image")
